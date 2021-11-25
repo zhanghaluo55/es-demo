@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "ecfaeba4-023d-40e3-b5b7-f2ac13638261",
+		"name": "ELK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "查询所有索引",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{vm-resource-elk}}/_cat/indices?v",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"_cat",
+						"indices"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "添加索引",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "添加文档",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"小米手机\",\r\n    \"images\" : \"http://10.1.5.156/xx.jpg\",\r\n    \"price\" : 3999.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_doc/1001",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_doc",
+						"1001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "查询索引下所有文档",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "文档部分修改",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"doc\" : {\r\n        \"title\" : \"华为\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_update/1001",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_update",
+						"1001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "搜索文档",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search?q=title:小米",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "title:小米"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "文档搜索2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\" : {\r\n        \"match\" : {\r\n            \"title\" :  \"小米\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "分页查询",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\" : {\r\n        \"match_all\" : {\r\n            \r\n        }\r\n    },\r\n    \"from\" : 0,\r\n    \"size\" : 2,\r\n    \"_source\" : [\"title\"],\r\n    \"sort\" : {\r\n        \"price\" : {\r\n            \"order\" : \"desc\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "条件查询1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\" : {\r\n        \"bool\" : {\r\n            \"must\" : [{\r\n                \"match\" : {\r\n                    \"title\" : \"小米\"\r\n                }\r\n            }],\r\n            \"filter\" : {\r\n                \"range\" : {\r\n                    \"price\" : {\r\n                        \"gt\" : 3900\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "条件查询2高亮",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\" : {\r\n        \"match_phrase\" : {\r\n            \"title\" : \"小米\"\r\n        }\r\n    },\r\n    \"highlight\" : {\r\n            \"fields\" : {\r\n                \"title\" : {\r\n                    \r\n                }\r\n            }\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "全查询-函数",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aggs\" : {\r\n        //聚合操作\r\n        \"price_group\" : {   //avg \r\n            \"terms\" : {    //avg求平均值\r\n                \"field\" : \"price\" // 分组字段\r\n            }\r\n        }\r\n    },\r\n    \"size\" : 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/shopping/_search",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"shopping",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "添加索引",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"properties\" : {\r\n        \"name\" : {\r\n            \"type\" : \"text\",\r\n            \"index\" : true\r\n        },\r\n        \"sex\" : {\r\n            \"type\" : \"keyword\", // keyword表示不能分词\r\n            \"index\" : true\r\n        },\r\n        \"tel\" : {\r\n            \"type\" : \"keyword\",\r\n            \"index\" : false\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{vm-resource-elk}}/user/_mapping",
+					"host": [
+						"{{vm-resource-elk}}"
+					],
+					"path": [
+						"user",
+						"_mapping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "集群状态",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "添加索引分片、副本",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "分析器",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "创建自定义分词器",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "自定义分词器查询",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "查询索引下对应文档",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	]
+}
